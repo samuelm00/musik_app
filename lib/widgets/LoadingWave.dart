@@ -8,7 +8,8 @@ class LoadingWave extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.7,
       child: Center(
         child: SpinKitCircle(
-          color: Colors.lightBlue,
+          size: 80.0,
+          color: Color.fromARGB(255, 54, 69, 143),
         ),
       ),
     );

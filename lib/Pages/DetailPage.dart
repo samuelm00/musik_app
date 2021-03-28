@@ -8,11 +8,6 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Musician musician = ModalRoute.of(context).settings.arguments;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Musikian App"),
-      ),
-      body: Column(children: [Text(musician.name)]),
-    );
+    return Column(children: [Text(musician.name)]);
   }
 }

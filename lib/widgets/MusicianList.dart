@@ -42,28 +42,62 @@ class MusicianListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.pushNamed(context, DetailPage.routeName,
-          arguments: musician),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.blue,
-        ),
-        height: 50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Color.fromARGB(255, 245, 247, 252),
+      ),
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
+                ),
+                border: Border.all(
+                  width: 1.0,
+                  color: Colors.grey[100],
+                  style: BorderStyle.solid,
+                ),
+              ),
               child: Icon(
                 Icons.person,
+                color: Color.fromARGB(255, 54, 69, 143),
+                size: 30,
+              ),
+            ),
+            flex: 2,
+          ),
+          Expanded(
+              child: Center(
+                child: Text(musician.name),
+              ),
+              flex: 6),
+          Expanded(
+            flex: 2,
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
                 color: Colors.white,
               ),
-              flex: 2,
+              child: InkWell(
+                onTap: () => Navigator.pushNamed(context, DetailPage.routeName,
+                    arguments: musician),
+                child: Icon(
+                  Icons.arrow_right,
+                  color: Color.fromARGB(255, 54, 69, 143),
+                  size: 30,
+                ),
+              ),
             ),
-            Expanded(child: Text(musician.name), flex: 8),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
