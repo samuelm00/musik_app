@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if (response["artists"] != null) {
           List<Musician> list = [
             Musician(
+                response["artists"][0]["idArtist"],
                 response["artists"][0]["strArtist"],
                 response["artists"][0]["strStyle"],
                 response["artists"][0]["intFormedYear"],

@@ -1,15 +1,16 @@
 class Musician {
-  Musician(String name, String style, String genre, String website,
+  Musician(String id, String name, String style, String genre, String website,
       String biography) {
+    this.id = id;
     this.name = name;
-    this.year = year;
+    this.genre = genre;
     this.style = style;
     this.website = website;
     this.biography = biography;
   }
 
+  String id;
   String name;
-  int year;
   String style;
   String genre;
   String website;
