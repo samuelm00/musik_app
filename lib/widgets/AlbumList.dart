@@ -58,7 +58,9 @@ class _AlbumListState extends State<AlbumList> {
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: albums.length,
-      itemBuilder: (BuildContext context, int index) => AlbumCard(),
+      itemBuilder: (BuildContext context, int index) => AlbumCard(
+        album: albums[index],
+      ),
       padding: EdgeInsets.all(8),
     );
   }
@@ -69,6 +71,17 @@ class _AlbumListState extends State<AlbumList> {
  * 
  */
 class AlbumCard extends StatelessWidget {
+  AlbumCard({this.album});
+
+  Album album;
+
+  String getFirst40Word(List<String> words) {
+    return words
+        .getRange(0, words.length > 40 ? 40 : words.length)
+        .join(" ")
+        .trim();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,7 +89,59 @@ class AlbumCard extends StatelessWidget {
       width: double.maxFinite,
       child: Card(
         elevation: 5,
-        child: SizedBox(height: 300, child: Text("hallo")),
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: SizedBox(
+            height: 300,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      album.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(album.year.toString()),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.network(
+                      album.imgUrl,
+                      height: 150,
+                      width: 150,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          album.genre != null ? album.genre : "",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Divider(),
+                        Container(
+                          width: 200,
+                          child: Text(
+                            album.description != null
+                                ? getFirst40Word(album.description.split(" ")) +
+                                    "..."
+                                : "",
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

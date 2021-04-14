@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
  * 
  */
 class ContentContainer extends StatelessWidget {
-  ContentContainer({this.widget});
+  ContentContainer({
+    this.widget,
+  });
 
   final Widget widget;
 
