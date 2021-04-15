@@ -7,6 +7,7 @@ class Musician {
     this.style = style;
     this.website = website;
     this.biography = biography;
+    this.markedAsFovorite = false;
   }
 
   String id;
@@ -15,4 +16,5 @@ class Musician {
   String genre;
   String website;
   String biography;
+  bool markedAsFovorite;
 }

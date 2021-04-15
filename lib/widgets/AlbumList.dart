@@ -40,12 +40,15 @@ class _AlbumListState extends State<AlbumList> {
   List<Album> parseResponse(dynamic response) {
     List<Album> temp = [];
     for (int i = 0; i < response["album"].length; ++i) {
-      temp.add(new Album(
-          response["album"][i]["strAlbum"],
-          response["album"][i]["strAlbumThumb"],
-          response["album"][i]["intYearReleased"],
-          response["album"][i]["strGenre"],
-          response["album"][i]["strDescriptionEN"]));
+      if (response["album"][i]["strReleaseFormat"] != "Live" &&
+          response["album"][i]["strReleaseFormat"] != "Compilation" &&
+          response["album"][i]["strReleaseFormat"] != "Single")
+        temp.add(new Album(
+            response["album"][i]["strAlbum"],
+            response["album"][i]["strAlbumThumb"],
+            response["album"][i]["intYearReleased"],
+            response["album"][i]["strGenre"],
+            response["album"][i]["strDescriptionEN"]));
     }
     return temp;
   }
@@ -82,6 +85,12 @@ class AlbumCard extends StatelessWidget {
         .trim();
   }
 
+  bool isValidUrl(String url) {
+    if (url == null) return false;
+    if (url.contains("https://") || url.contains("http://")) return true;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -111,31 +120,39 @@ class AlbumCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.network(
-                      album.imgUrl,
+                    isValidUrl(album.imgUrl)
+                        ? Image.network(
+                            album.imgUrl != null ? album.imgUrl : "",
+                            height: 150,
+                            width: 150,
+                          )
+                        : Container(
+                            width: 150,
+                            height: 150,
+                            color: Colors.grey[300],
+                            alignment: Alignment.center,
+                            child: Text("No image"),
+                          ),
+                    Container(
+                      width: 170,
                       height: 150,
-                      width: 150,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          album.genre != null ? album.genre : "",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        Divider(),
-                        Container(
-                          width: 200,
-                          child: Text(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            album.genre != null ? album.genre : "",
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Text(
                             album.description != null
                                 ? getFirst40Word(album.description.split(" ")) +
                                     "..."
                                 : "",
                             style: TextStyle(fontSize: 11),
                           ),
-                        ),
-                      ],
-                    )
+                        ],
+                      ),
+                    ),
                   ],
                 )
               ],
