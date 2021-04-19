@@ -15,10 +15,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _userInput = "";
   String _errorMassageFetching = "";
-  String _errorMassageTextField = "";
-  final errorTextField = TextEditingController();
+  final _textFieldController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   List<Musician> musicians = [];
   bool loading = false;
 
@@ -27,49 +26,38 @@ class _MyHomePageState extends State<MyHomePage> {
         artist.toLowerCase());
   }
 
-  Future<void> search() async {
+  Future<void> search(String value) async {
     setState(() {
       loading = true;
     });
+    try {
+      dynamic response =
+          json.decode(await fetchAlbum(value).then((value) => value.body));
 
-    if (_userInput.length == 0)
-      setState(() {
-        _errorMassageTextField = "Can't be empty";
-      });
-    else {
-      try {
-        dynamic response = json
-            .decode(await fetchAlbum(_userInput).then((value) => value.body));
-
-        if (response["artists"] != null) {
-          List<Musician> list = [
-            Musician(
-                response["artists"][0]["idArtist"],
-                response["artists"][0]["strArtist"],
-                response["artists"][0]["strStyle"],
-                response["artists"][0]["intFormedYear"],
-                response["artists"][0]["strWebsite"],
-                response["artists"][0]["strBiographyEN"])
-          ];
-          setState(() {
-            musicians = list;
-          });
-        } else {
-          setState(() {
-            musicians = [];
-          });
-        }
+      if (response["artists"] != null) {
+        List<Musician> list = [
+          Musician(
+              response["artists"][0]["idArtist"],
+              response["artists"][0]["strArtist"],
+              response["artists"][0]["strStyle"],
+              response["artists"][0]["intFormedYear"],
+              response["artists"][0]["strWebsite"],
+              response["artists"][0]["strBiographyEN"]),
+        ];
         setState(() {
-          if (_errorMassageFetching.length > 0) _errorMassageFetching = "";
-          if (_errorMassageTextField.length > 0) _errorMassageTextField = "";
+          musicians = list;
         });
-      } catch (e) {
-        print(e);
+      } else {
         setState(() {
-          _errorMassageFetching =
-              "An Error Occured while fetching data from the api!";
+          musicians = [];
         });
       }
+    } catch (e) {
+      print(e);
+      setState(() {
+        _errorMassageFetching =
+            "An Error Occured while fetching data from the api!";
+      });
     }
     setState(() {
       loading = false;
@@ -84,48 +72,59 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 8,
-                    child: TextFormField(
-                      onChanged: (String value) => setState(() {
-                        _userInput = value;
-                      }),
-                      controller: errorTextField,
-                      onFieldSubmitted: (value) => search(),
-                      decoration: InputDecoration(
-                        errorText: _errorMassageTextField.length > 0
-                            ? "Can't be empty"
-                            : null,
-                        hintText: "Enter a brand or a musician",
-                        border: OutlineInputBorder(),
-                        labelText: "Musician",
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      height: 60,
-                      margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 68, 86, 166),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(50),
-                        onTap: search,
-                        child: Container(
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.white,
+              child: Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                key: _formKey,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: TextFormField(
+                        controller: _textFieldController,
+                        onFieldSubmitted: (value) => search(value),
+                        validator: (value) {
+                          if (value.isEmpty || value == null) {
+                            return "Can't be empty";
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Enter a brand or a musician",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
+                          labelText: "Musician",
                         ),
                       ),
                     ),
-                  )
-                ],
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        height: 60,
+                        margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 68, 86, 166),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(50),
+                          onTap: () {
+                            if (_formKey.currentState.validate()) {
+                              search(_textFieldController.text);
+                            }
+                          },
+                          child: Container(
+                            child: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Divider(),
