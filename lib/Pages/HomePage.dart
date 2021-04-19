@@ -19,6 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _textFieldController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   List<Musician> musicians = [];
+  List<Musician> markedAsFavorite = [];
   bool loading = false;
 
   Future<http.Response> fetchAlbum(String artist) {

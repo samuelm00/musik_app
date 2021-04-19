@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:musikapp/Pages/DetailPage.dart';
 import 'package:musikapp/types/Colors.dart';
+import 'package:musikapp/Pages/FavoritePage.dart';
+import 'package:musikapp/widgets/Footer.dart';
 import 'Pages/HomePage.dart';
 
 void main() {
@@ -21,7 +23,9 @@ class MyApp extends StatelessWidget {
       ),
       routes: <String, WidgetBuilder>{
         DetailPage.routeName: (BuildContext context) =>
-            ContentContainer(widget: DetailPage())
+            ContentContainer(widget: DetailPage()),
+        FavoritePage.routeName: (BuildContext context) =>
+            ContentContainer(widget: FavoritePage())
       },
       home: ContentContainer(widget: MyHomePage(title: 'Musik Application')),
       initialRoute: "/",
@@ -46,8 +50,18 @@ class ContentContainer extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Musik app"),
+        actions: [
+          ModalRoute.of(context).settings.name != "/"
+              ? Container()
+              : IconButton(
+                  icon: Icon(Icons.star),
+                  onPressed: () {
+                    Navigator.pushNamed(context, FavoritePage.routeName);
+                  })
+        ],
       ),
-      body: widget,
+      body: Padding(padding: const EdgeInsets.all(8.0), child: widget),
+      bottomSheet: Footer(),
     );
   }
 }
