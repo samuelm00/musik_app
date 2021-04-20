@@ -105,9 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: 60,
                         margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 68, 86, 166),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
+                            color: Color.fromARGB(255, 68, 86, 166),
+                            shape: BoxShape.circle),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(50),
                           onTap: () {
