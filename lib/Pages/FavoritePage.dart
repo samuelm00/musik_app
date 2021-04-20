@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:musikapp/redux/appState.dart';
 import 'package:musikapp/types/Musician.dart';
-import 'package:musikapp/widgets/AlbumList.dart';
 import 'package:musikapp/widgets/MusicianList.dart';
 
 class FavoritePage extends StatelessWidget {
@@ -15,12 +14,8 @@ class FavoritePage extends StatelessWidget {
       builder: (context, List<Musician> markedAsFavorite) =>
           SingleChildScrollView(
         physics: ScrollPhysics(),
-        child: markedAsFavorite != null && !markedAsFavorite.isEmpty
+        child: markedAsFavorite != null && markedAsFavorite.isNotEmpty
             ? Column(children: [
-                Text(
-                  "Favorites:",
-                  style: TextStyle(fontSize: 30),
-                ),
                 MusicianList(musicians: markedAsFavorite),
               ])
             : Container(

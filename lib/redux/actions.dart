@@ -5,3 +5,19 @@ class UpdateMarkedAsFavorite {
 
   UpdateMarkedAsFavorite(this.newFavorite);
 }
+
+/**
+ * 
+ */
+class UpdateAppBarTitle {
+  final String newTitle;
+
+  UpdateAppBarTitle(this.newTitle);
+}
+
+/**
+ * 
+ */
+class UpdateAppBarTitleBack {
+  UpdateAppBarTitleBack();
+}

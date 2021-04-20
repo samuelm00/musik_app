@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:musikapp/Pages/DetailPage.dart';
+import 'package:musikapp/redux/actions.dart';
 import 'package:musikapp/redux/appState.dart';
 import 'package:musikapp/redux/reducer.dart';
 import 'package:musikapp/types/Colors.dart';
@@ -18,8 +19,8 @@ void main() {
  * 
  */
 class MyApp extends StatelessWidget {
-  final Store<AppState> store = Store<AppState>(markedAsFavoriteReducer,
-      initialState: AppState(markedAsFavorite: []));
+  final Store<AppState> store =
+      Store<AppState>(appReducer, initialState: AppState(markedAsFavorite: []));
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +32,26 @@ class MyApp extends StatelessWidget {
           primarySwatch: MaterialColor(0xFF4456A6, primarySwatch),
         ),
         routes: <String, WidgetBuilder>{
-          DetailPage.routeName: (BuildContext context) =>
-              ContentContainer(widget: DetailPage()),
-          FavoritePage.routeName: (BuildContext context) =>
-              ContentContainer(widget: FavoritePage())
+          DetailPage.routeName: (BuildContext context) => WillPopScope(
+                onWillPop: () {
+                  StoreProvider.of<AppState>(context)
+                      .dispatch(UpdateAppBarTitleBack());
+                  Navigator.pop(context);
+                },
+                child: ContentContainer(
+                  widget: DetailPage(),
+                ),
+              ),
+          FavoritePage.routeName: (BuildContext context) => WillPopScope(
+                onWillPop: () {
+                  StoreProvider.of<AppState>(context)
+                      .dispatch(UpdateAppBarTitleBack());
+                  Navigator.pop(context);
+                },
+                child: ContentContainer(
+                  widget: FavoritePage(),
+                ),
+              )
         },
         home: ContentContainer(widget: MyHomePage(title: 'Musik Application')),
         initialRoute: "/",
@@ -56,22 +73,27 @@ class ContentContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Musik app"),
-        actions: [
-          ModalRoute.of(context).settings.name != "/"
-              ? Container()
-              : IconButton(
-                  icon: Icon(Icons.star),
-                  onPressed: () {
-                    Navigator.pushNamed(context, FavoritePage.routeName);
-                  })
-        ],
+    return StoreConnector<AppState, String>(
+      converter: (store) => store.state.appBarTitle,
+      builder: (context, String title) => Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(title),
+          actions: [
+            ModalRoute.of(context).settings.name != "/"
+                ? Container()
+                : IconButton(
+                    icon: Icon(Icons.star),
+                    onPressed: () {
+                      StoreProvider.of<AppState>(context)
+                          .dispatch(UpdateAppBarTitle("Favorites"));
+                      Navigator.pushNamed(context, FavoritePage.routeName);
+                    })
+          ],
+        ),
+        body: Padding(padding: const EdgeInsets.all(8.0), child: widget),
+        bottomSheet: Footer(),
       ),
-      body: Padding(padding: const EdgeInsets.all(8.0), child: widget),
-      bottomSheet: Footer(),
     );
   }
 }
