@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:musikapp/Pages/DetailPage.dart';
+import 'package:musikapp/redux/appState.dart';
+import 'package:musikapp/redux/reducer.dart';
 import 'package:musikapp/types/Colors.dart';
 import 'package:musikapp/Pages/FavoritePage.dart';
 import 'package:musikapp/widgets/Footer.dart';
 import 'Pages/HomePage.dart';
+import "package:redux/redux.dart";
 
 void main() {
   runApp(MyApp());
@@ -14,21 +18,27 @@ void main() {
  * 
  */
 class MyApp extends StatelessWidget {
+  final Store<AppState> store = Store<AppState>(markedAsFavoriteReducer,
+      initialState: AppState(markedAsFavorite: []));
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: MaterialColor(0xFF4456A6, primarySwatch),
+    return StoreProvider(
+      store: store,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: MaterialColor(0xFF4456A6, primarySwatch),
+        ),
+        routes: <String, WidgetBuilder>{
+          DetailPage.routeName: (BuildContext context) =>
+              ContentContainer(widget: DetailPage()),
+          FavoritePage.routeName: (BuildContext context) =>
+              ContentContainer(widget: FavoritePage())
+        },
+        home: ContentContainer(widget: MyHomePage(title: 'Musik Application')),
+        initialRoute: "/",
       ),
-      routes: <String, WidgetBuilder>{
-        DetailPage.routeName: (BuildContext context) =>
-            ContentContainer(widget: DetailPage()),
-        FavoritePage.routeName: (BuildContext context) =>
-            ContentContainer(widget: FavoritePage())
-      },
-      home: ContentContainer(widget: MyHomePage(title: 'Musik Application')),
-      initialRoute: "/",
     );
   }
 }

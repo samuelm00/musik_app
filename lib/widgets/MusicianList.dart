@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:musikapp/Pages/DetailPage.dart';
+import 'package:musikapp/redux/actions.dart';
+import 'package:musikapp/redux/appState.dart';
 import 'package:musikapp/types/Colors.dart';
 import '../types/Musician.dart';
 
@@ -70,6 +73,10 @@ class MusicianListItem extends StatelessWidget {
               ),
               child: PopupMenuButton<int>(
                 child: Icon(Icons.person, color: primarySwatch[900]),
+                onSelected: (int index) => {
+                  StoreProvider.of<AppState>(context)
+                      .dispatch(UpdateMarkedAsFavorite(musician))
+                },
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     value: 0,
