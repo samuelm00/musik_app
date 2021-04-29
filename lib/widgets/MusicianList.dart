@@ -65,37 +65,39 @@ class _MusicianListItemState extends State<MusicianListItem> {
           children: [
             Expanded(
               child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20),
-                    ),
-                    border: Border.all(
-                      width: 1.0,
-                      color: Colors.grey[100],
-                      style: BorderStyle.solid,
-                    ),
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
                   ),
-                  child: InkWell(
-                    onTap: () => StoreProvider.of<AppState>(context)
-                        .dispatch(UpdateMarkedAsFavorite(widget.musician)),
-                    child: Icon(
-                      markedAsFavorite.any(
-                              (element) => element.id == widget.musician.id)
-                          ? Icons.star
-                          : Icons.star_border,
-                      color: primarySwatch[900],
-                    ),
-                  )),
+                  border: Border.all(
+                    width: 1.0,
+                    color: Colors.grey[100],
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                child: InkWell(
+                  onTap: () => StoreProvider.of<AppState>(context)
+                      .dispatch(UpdateMarkedAsFavorite(widget.musician)),
+                  child: Icon(
+                    markedAsFavorite
+                            .any((element) => element.id == widget.musician.id)
+                        ? Icons.star
+                        : Icons.star_border,
+                    color: primarySwatch[900],
+                  ),
+                ),
+              ),
               flex: 2,
             ),
             Expanded(
-                child: Center(
-                  child: Text(widget.musician.name),
-                ),
-                flex: 6),
+              child: Center(
+                child: Text(widget.musician.name),
+              ),
+              flex: 6,
+            ),
             Expanded(
               flex: 2,
               child: Container(

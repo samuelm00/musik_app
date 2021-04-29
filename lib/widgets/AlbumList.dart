@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:musikapp/types/Album.dart';
 import 'package:http/http.dart' as http;
+import 'package:musikapp/widgets/DescriptionDialog.dart';
 import 'package:musikapp/widgets/LoadingWave.dart';
 
 /**
@@ -80,9 +81,11 @@ class AlbumCard extends StatelessWidget {
 
   String getFirst40Word(List<String> words) {
     return words
-        .getRange(0, words.length > 40 ? 40 : words.length)
-        .join(" ")
-        .trim();
+            .getRange(0, words.length > 40 ? 40 : words.length)
+            .join(" ")
+            .trim() +
+        (words.length > 40 ? "..." : "");
+    ;
   }
 
   bool isValidUrl(String url) {
@@ -143,12 +146,25 @@ class AlbumCard extends StatelessWidget {
                             album.genre != null ? album.genre : "",
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          Text(
-                            album.description != null
-                                ? getFirst40Word(album.description.split(" ")) +
-                                    "..."
-                                : "",
-                            style: TextStyle(fontSize: 11),
+                          InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return DescriptionDialog(
+                                        description: album.description);
+                                  });
+                            },
+                            child: Tooltip(
+                              message: "Show conplete description",
+                              child: Text(
+                                album.description != null
+                                    ? getFirst40Word(
+                                        album.description.split(" "))
+                                    : "No description",
+                                style: TextStyle(fontSize: 11),
+                              ),
+                            ),
                           ),
                         ],
                       ),
